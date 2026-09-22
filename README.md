@@ -4,6 +4,6 @@ Repositório da atividade acadêmica contendo a implementação de Azure Functio
 
 ## Integrantes da Equipe
 - Murilo Silveira
-- Caio tirelli
+- CAIO LUIS TIRELLI
 - Thainara hemkemeier
--Leonardo 
+- LEONARDO RIBEIRO SUSSENBACH
