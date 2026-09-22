@@ -36,7 +36,7 @@ def greet(req: func.HttpRequest) -> func.HttpResponse:
 # 2. Timer Trigger (Simples) - Imprime apenas um log no terminal
 # ---------------------------------------------------------
 @app.timer_trigger(schedule="0 */5 * * * *", arg_name="mytimer", run_on_startup=False,
-                   use_monitor=False) 
+                    use_monitor=False) 
 def timer_log(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('O timer está atrasado!')
@@ -48,13 +48,13 @@ def timer_log(mytimer: func.TimerRequest) -> None:
 # 3. Timer Trigger (Chamada HTTP) - Faz chamada HTTP para a outra função
 # ---------------------------------------------------------
 @app.timer_trigger(schedule="0 */10 * * * *", arg_name="mycointimer", run_on_startup=False,
-                   use_monitor=False)
+                    use_monitor=False)
 def timer_call_http(mycointimer: func.TimerRequest) -> None:
     if mycointimer.past_due:
         logging.info('O timer está atrasado!')
 
     # URL local apontando para a função HTTP criada acima com um texto identificador
-    target_url = "http://localhost:7071/api/greet?name=ChamadaAutomaticaDoTimer"
+    target_url = "https://funapp-themkemeier-g8dfdadsckdegjcb.canadacentral-01.azurewebsites.net/api/greet?name=ChamadaAutomaticaDoTimer"
     
     try:
         response = requests.get(target_url)
