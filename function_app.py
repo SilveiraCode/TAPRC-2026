@@ -65,14 +65,14 @@ def timer_call_http(mycointimer: func.TimerRequest) -> None:
 
 
 # ---------------------------------------------------------
-# 4. Timer Trigger - Conecta ao banco de dados e captura os dados de uma tabela
+# 4. Timer Trigger - Conecta ao banco de dados e captura os dados de TODAS as tabelas
 # ---------------------------------------------------------
 @app.timer_trigger(schedule="0 */15 * * * *", arg_name="dbtimer", run_on_startup=False, use_monitor=False)
-def capturar_dados_banco(dbtimer: func.TimerRequest) -> None:
+def capturar_todas_tabelas(dbtimer: func.TimerRequest) -> None:
     if dbtimer.past_due:
         logging.info('O timer do banco está atrasado!')
 
-    logging.info('Iniciando captura de dados do banco de origem...')
+    logging.info('Iniciando captura de dados de todas as tabelas do ITSM...')
 
     # Recuperando credenciais com segurança via variáveis de ambiente
     db_server = os.environ.get("DB_SERVER")
@@ -92,29 +92,29 @@ def capturar_dados_banco(dbtimer: func.TimerRequest) -> None:
         f"PWD={db_password}"
     )
 
+    # Lista com as tabelas principais e essenciais do sistema
+    tabelas = [
+        "analista",
+        "categoria",
+        "chamado",
+        "solicitante"
+    ]
     try:
         logging.info(f"Conectando ao banco {db_database}...")
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
 
-        # Escolha a tabela desejada para capturar os dados
-        tabela_escolhida = "SuaTabela"
-        query = f"SELECT * FROM {tabela_escolhida}"
-        
-        logging.info(f"Executando consulta na tabela: {tabela_escolhida}")
-        cursor.execute(query)
-        
-        colunas = [column[0] for column in cursor.description]
-        registros = cursor.fetchall()
-
-        logging.info(f"Sucesso! {len(registros)} registros capturados da tabela {tabela_escolhida}.")
-
-        for linha in registros:
-            dados_linha = dict(zip(colunas, linha))
-            logging.info(f"Registro obtido: {dados_linha}")
+        for tabela in tabelas:
+            try:
+                query = f"SELECT * FROM {tabela}"
+                cursor.execute(query)
+                registros = cursor.fetchall()
+                logging.info(f"Sucesso: {len(registros)} registos capturados da tabela '{tabela}'.")
+            except Exception as err_tabela:
+                logging.error(f"Erro ao consultar a tabela '{tabela}': {str(err_tabela)}")
 
     except Exception as e:
-        logging.error(f"Erro ao consultar o banco de dados: {str(e)}")
+        logging.error(f"Erro geral ao conectar ou consultar o banco de dados: {str(e)}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
