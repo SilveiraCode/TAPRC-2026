@@ -2,6 +2,10 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "python"
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "DB_SERVER": "seu_servidor.database.windows.net",
+    "DB_DATABASE": "nome_do_banco",
+    "DB_USER": "usr_read_itsm02",
+    "DB_PASSWORD": "mJtm1ykno#0=rTPrK#B"
   }
 }
